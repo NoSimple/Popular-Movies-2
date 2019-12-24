@@ -1,6 +1,7 @@
 package ga.demi.popularmovies.views;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -18,9 +19,11 @@ public final class MovieDetailActivity extends AppCompatActivity {
     private ImageView mMoviePosterIV;
     private TextView mMovieTitleTV;
     private TextView mMovieDateReleaseTV;
-    private TextView mMovieTimeTV;
     private TextView mMovieAverageTV;
     private TextView mMovieOverviewTV;
+
+    private RecyclerView mTrailersRV;
+    private RecyclerView mReviewsRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +35,11 @@ public final class MovieDetailActivity extends AppCompatActivity {
         mMoviePosterIV = findViewById(R.id.iv_movie_poster);
         mMovieTitleTV = findViewById(R.id.tv_movie_title);
         mMovieDateReleaseTV = findViewById(R.id.tv_movie_date_release);
-        mMovieTimeTV = findViewById(R.id.tv_movie_time);
         mMovieAverageTV = findViewById(R.id.tv_movie_average);
         mMovieOverviewTV = findViewById(R.id.tv_movie_overview);
+
+        mTrailersRV = findViewById(R.id.rv_trailers);
+        mReviewsRV = findViewById(R.id.rv_reviews);
 
         Bundle movieBundle = getIntent().getExtras();
         if (movieBundle != null) {

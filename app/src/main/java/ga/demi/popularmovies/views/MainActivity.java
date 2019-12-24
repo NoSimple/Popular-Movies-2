@@ -72,6 +72,9 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
                 getMoviesTopRatingRequestApi();
                 break;
             }
+            case (R.id.favorites_search): {
+                break;
+            }
         }
 
         return super.onOptionsItemSelected(item);
