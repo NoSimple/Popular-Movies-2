@@ -1,6 +1,8 @@
 package ga.demi.popularmovies.api;
 
 import ga.demi.popularmovies.models.PopularMovieModel;
+import ga.demi.popularmovies.models.ReviewsMovieModel;
+import ga.demi.popularmovies.models.VideosMovieModel;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -28,10 +30,18 @@ public final class RequestToApiMovieDB {
     }
 
     public Call<PopularMovieModel> getMoviePostersPopularRequest() {
-        return mRetrofit.create(IMoviePostersRequest.class).getMoviesPostersPopular(API_KEY);
+        return mRetrofit.create(IMovieInfoRequest.class).getMoviesPostersPopular(API_KEY);
     }
 
     public Call<PopularMovieModel> getMoviePostersTopRatedRequest() {
-        return mRetrofit.create(IMoviePostersRequest.class).getMoviesPostersTopRated(API_KEY);
+        return mRetrofit.create(IMovieInfoRequest.class).getMoviesPostersTopRated(API_KEY);
+    }
+
+    public Call<VideosMovieModel> getMovieVideosRequest(String idMovie) {
+        return mRetrofit.create(IMovieInfoRequest.class).getMoviesVideos(API_KEY, idMovie);
+    }
+
+    public Call<ReviewsMovieModel> getMovieReviewsRequest(String idMovie) {
+        return mRetrofit.create(IMovieInfoRequest.class).getMoviesReviews(API_KEY, idMovie);
     }
 }

@@ -4,6 +4,8 @@
     <string name="highest_rated_text_menu">Highest rated</string>
     <string name="favorites_text_menu">Favorites</string>
     <string name="error_connection_text">There was an error connecting</string>
+    <string name="error_no_content_text">No content…</string>
     <string name="trailers_title_text">Trailers:</string>
     <string name="reviews_title_text">Reviews:</string>
+    <string name="mark_as_favorite_text">mark as favorite</string>
 </resources>
