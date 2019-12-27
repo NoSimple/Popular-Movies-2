@@ -38,10 +38,10 @@ public final class RequestToApiMovieDB {
     }
 
     public Call<VideosMovieModel> getMovieVideosRequest(String idMovie) {
-        return mRetrofit.create(IMovieInfoRequest.class).getMoviesVideos(API_KEY, idMovie);
+        return mRetrofit.create(IMovieInfoRequest.class).getMoviesVideos(idMovie, API_KEY);
     }
 
     public Call<ReviewsMovieModel> getMovieReviewsRequest(String idMovie) {
-        return mRetrofit.create(IMovieInfoRequest.class).getMoviesReviews(API_KEY, idMovie);
+        return mRetrofit.create(IMovieInfoRequest.class).getMoviesReviews(idMovie, API_KEY);
     }
 }

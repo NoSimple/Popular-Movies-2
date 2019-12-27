@@ -165,7 +165,8 @@ public final class Result implements Parcelable {
         this.posterPath = posterPath;
     }
 
-    public Result(String title, String posterPath, String releaseDate, Double voteAverage, String overview) {
+    public Result(int id, String title, String posterPath, String releaseDate, Double voteAverage, String overview) {
+        setId(id);
         setTitle(title);
         setPosterPath(posterPath);
         setReleaseDate(releaseDate);
@@ -177,12 +178,13 @@ public final class Result implements Parcelable {
 
         @Override
         public Result createFromParcel(Parcel source) {
+            int id = source.readInt();
             String title = source.readString();
             String posterPath = source.readString();
             String releaseDate = source.readString();
             Double voteAverage = source.readDouble();
             String overview = source.readString();
-            return new Result(title, posterPath, releaseDate, voteAverage, overview);
+            return new Result(id, title, posterPath, releaseDate, voteAverage, overview);
         }
 
         @Override
@@ -198,6 +200,7 @@ public final class Result implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(getId());
         parcel.writeString(getTitle());
         parcel.writeString(getPosterPath());
         parcel.writeString(getReleaseDate());

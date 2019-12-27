@@ -1,6 +1,7 @@
 package ga.demi.popularmovies.views;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import ga.demi.popularmovies.R;
 import ga.demi.popularmovies.adapters.MovieReviewsAdapter;
 import ga.demi.popularmovies.adapters.MovieVideosAdapter;
 import ga.demi.popularmovies.api.RequestToApiMovieDB;
-import ga.demi.popularmovies.models.PopularMovieModel;
 import ga.demi.popularmovies.models.Result;
 import ga.demi.popularmovies.models.ReviewsMovieModel;
 import ga.demi.popularmovies.models.VideosMovieModel;
@@ -27,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public final class MovieDetailActivity extends AppCompatActivity {
+public final class MovieDetailActivity extends AppCompatActivity implements MovieVideosAdapter.ListVideosItemClickListener, MovieReviewsAdapter.ListReviewsItemClickListener {
 
     private RequestToApiMovieDB mRequestToApiMovieDB;
     private Result mMoviePoster;
@@ -75,6 +75,14 @@ public final class MovieDetailActivity extends AppCompatActivity {
 
         mMarkAsFavoriteB = findViewById(R.id.b_mark_as_favorite);
 
+       /* RecyclerView.LayoutManager videosLayoutManager = new RecyclerView.LayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        mMoviePostersRV.setLayoutManager(layoutManager);
+        mMoviePostersRV.setHasFixedSize(true);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        mMoviePostersRV.setLayoutManager(layoutManager);
+        mMoviePostersRV.setHasFixedSize(true);*/
+
         Bundle movieBundle = getIntent().getExtras();
         if (movieBundle != null) {
             mMoviePoster = movieBundle.getParcelable(Result.class.getSimpleName());
@@ -86,6 +94,9 @@ public final class MovieDetailActivity extends AppCompatActivity {
             mMovieDateReleaseTV.setText(mMoviePoster.getReleaseDate());
             mMovieAverageTV.setText(String.valueOf(mMoviePoster.getVoteAverage()));
             mMovieOverviewTV.setText(mMoviePoster.getOverview());
+
+            getMoviesVideosRequestApi(mMoviePoster.getId().toString());
+            getMoviesReviewsRequestApi(mMoviePoster.getId().toString());
         }
     }
 
@@ -121,6 +132,16 @@ public final class MovieDetailActivity extends AppCompatActivity {
     private void setReviewsRecyclerView(List<ReviewsMovieModel.ResultReviews> movieReviewsList) {
         mReviewsAdapter = new MovieReviewsAdapter(movieReviewsList, this);
         mReviewsRV.setAdapter(mReviewsAdapter);
+    }
+
+    @Override
+    public void onListReviewsItemClick(String clickedItemUrl) {
+
+    }
+
+    @Override
+    public void onListVideosItemClick(String clickedItemId) {
+
     }
 
     private void getMoviesVideosRequestApi(String idMovie) {

@@ -15,9 +15,9 @@ public interface IMovieInfoRequest {
     @GET("top_rated/")
     Call<PopularMovieModel> getMoviesPostersTopRated(@Query("api_key") String key);
 
-    @GET("{id}/videos/")
-    Call<VideosMovieModel> getMoviesVideos(@Query("api_key") String key, @Path("id") String idMovie);
+    @GET("{id}/videos")
+    Call<VideosMovieModel> getMoviesVideos(@Path("id") String idMovie, @Query("api_key") String key);
 
-    @GET("{id}/reviews/")
-    Call<ReviewsMovieModel> getMoviesReviews(@Query("api_key") String key, @Path("id") String idMovie);
+    @GET("{id}/reviews")
+    Call<ReviewsMovieModel> getMoviesReviews(@Path("id") String idMovie, @Query("api_key") String key);
 }
