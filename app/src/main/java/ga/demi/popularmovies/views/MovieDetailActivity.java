@@ -1,7 +1,6 @@
 package ga.demi.popularmovies.views;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import ga.demi.popularmovies.Constants;
 import ga.demi.popularmovies.R;
 import ga.demi.popularmovies.adapters.MovieReviewsAdapter;
 import ga.demi.popularmovies.adapters.MovieVideosAdapter;
@@ -75,20 +75,14 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
 
         mMarkAsFavoriteB = findViewById(R.id.b_mark_as_favorite);
 
-       /* RecyclerView.LayoutManager videosLayoutManager = new RecyclerView.LayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
-        mMoviePostersRV.setLayoutManager(layoutManager);
-        mMoviePostersRV.setHasFixedSize(true);
-
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
-        mMoviePostersRV.setLayoutManager(layoutManager);
-        mMoviePostersRV.setHasFixedSize(true);*/
-
         Bundle movieBundle = getIntent().getExtras();
         if (movieBundle != null) {
             mMoviePoster = movieBundle.getParcelable(Result.class.getSimpleName());
 
-            String posterUrl = "https://image.tmdb.org/t/p/w185/" + mMoviePoster.getPosterPath();
-            Picasso.get().load(posterUrl).into(mMoviePosterIV);
+            if (mMoviePoster != null) {
+                String posterUrl = Constants.BASE_POSTER_URL + mMoviePoster.getPosterPath();
+                Picasso.get().load(posterUrl).into(mMoviePosterIV);
+            }
 
             mMovieTitleTV.setText(mMoviePoster.getTitle());
             mMovieDateReleaseTV.setText(mMoviePoster.getReleaseDate());
