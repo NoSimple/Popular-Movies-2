@@ -1,9 +1,14 @@
 package ga.demi.popularmovies.views;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -89,6 +94,14 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
             mMovieAverageTV.setText(String.valueOf(mMoviePoster.getVoteAverage()));
             mMovieOverviewTV.setText(mMoviePoster.getOverview());
 
+            LinearLayoutManager layoutManagerForVideo = new LinearLayoutManager(this);
+            mVideosRV.setLayoutManager(layoutManagerForVideo);
+            mVideosRV.setHasFixedSize(true);
+
+            LinearLayoutManager layoutManagerForReview = new LinearLayoutManager(this);
+            mReviewsRV.setLayoutManager(layoutManagerForReview);
+            mReviewsRV.setHasFixedSize(true);
+
             getMoviesVideosRequestApi(mMoviePoster.getId().toString());
             getMoviesReviewsRequestApi(mMoviePoster.getId().toString());
         }
@@ -130,12 +143,24 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
 
     @Override
     public void onListReviewsItemClick(String clickedItemUrl) {
-
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(clickedItemUrl));
+        try {
+            startActivity(webIntent);
+        } catch (ActivityNotFoundException ex) {
+            Log.e("MovieDetailActivity", ex.getMessage());
+            Toast.makeText(getBaseContext(), getResources().getText(R.string.app_not_found_text), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onListVideosItemClick(String clickedItemId) {
-
+        Intent youtubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.BASE_VIDEO_URL + clickedItemId));
+        try {
+            startActivity(youtubeIntent);
+        } catch (ActivityNotFoundException ex) {
+            Log.e("MovieDetailActivity", ex.getMessage());
+            Toast.makeText(getBaseContext(), getResources().getText(R.string.app_not_found_text), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void getMoviesVideosRequestApi(String idMovie) {

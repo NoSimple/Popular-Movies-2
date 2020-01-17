@@ -97,6 +97,7 @@
 
             <ProgressBar
                 android:id="@+id/pb_movie_videos"
+                style="?android:attr/progressBarStyleSmallTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
@@ -132,6 +133,7 @@
 
             <ProgressBar
                 android:id="@+id/pb_movie_reviews"
+                style="?android:attr/progressBarStyleSmallTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />

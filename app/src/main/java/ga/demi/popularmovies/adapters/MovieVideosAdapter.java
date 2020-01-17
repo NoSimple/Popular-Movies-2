@@ -59,7 +59,7 @@ public final class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAd
 
         @Override
         public void onClick(View view) {
-            mOnClickListener.onListVideosItemClick(mMovieVideosList.get(getAdapterPosition()).getId());
+            mOnClickListener.onListVideosItemClick(mMovieVideosList.get(getAdapterPosition()).getKey());
         }
 
         void bind(String nameText) {
