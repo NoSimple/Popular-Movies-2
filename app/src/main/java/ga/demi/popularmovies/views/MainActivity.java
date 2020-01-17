@@ -16,9 +16,11 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import ga.demi.popularmovies.App;
 import ga.demi.popularmovies.R;
 import ga.demi.popularmovies.adapters.MoviePosterAdapter;
 import ga.demi.popularmovies.api.RequestToApiMovieDB;
+import ga.demi.popularmovies.data.MovieDatabase;
 import ga.demi.popularmovies.models.PopularMovieModel;
 import ga.demi.popularmovies.models.Result;
 import retrofit2.Call;
@@ -36,6 +38,8 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
 
     private MoviePosterAdapter mAdapter;
 
+    private MovieDatabase mMovieDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,8 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
 
         mRequestToApiMovieDB = RequestToApiMovieDB.getInstanceRequestToApi();
 
+        mMovieDatabase = App.getInstanceApp().getMovieDatabase();
+
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mMoviePostersRV.setLayoutManager(layoutManager);
         mMoviePostersRV.setHasFixedSize(true);
@@ -58,6 +64,15 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.choice, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (mMovieDatabase.getFavoriteMovieDao().getFavoriteMovieAll().getValue() == null) {
+            menu.findItem(R.id.favorites_search).setEnabled(false);
+        }
         return true;
     }
 

@@ -20,11 +20,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import ga.demi.popularmovies.App;
 import ga.demi.popularmovies.Constants;
 import ga.demi.popularmovies.R;
 import ga.demi.popularmovies.adapters.MovieReviewsAdapter;
 import ga.demi.popularmovies.adapters.MovieVideosAdapter;
 import ga.demi.popularmovies.api.RequestToApiMovieDB;
+import ga.demi.popularmovies.data.MovieDatabase;
 import ga.demi.popularmovies.models.Result;
 import ga.demi.popularmovies.models.ReviewsMovieModel;
 import ga.demi.popularmovies.models.VideosMovieModel;
@@ -36,6 +38,8 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
 
     private RequestToApiMovieDB mRequestToApiMovieDB;
     private Result mMoviePoster;
+
+    private MovieDatabase mMovieDatabase;
 
     private ImageView mMoviePosterIV;
     private TextView mMovieTitleTV;
@@ -61,6 +65,8 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
         setContentView(R.layout.activity_movie_detail);
 
         mRequestToApiMovieDB = RequestToApiMovieDB.getInstanceRequestToApi();
+
+        mMovieDatabase = App.getInstanceApp().getMovieDatabase();
 
         getSupportActionBar().setTitle("Movie detail");
 

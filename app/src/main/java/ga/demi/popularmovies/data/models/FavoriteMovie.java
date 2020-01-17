@@ -8,4 +8,6 @@ public class FavoriteMovie {
 
     @PrimaryKey
     public int id;
+
+    public String posterPath;
 }
