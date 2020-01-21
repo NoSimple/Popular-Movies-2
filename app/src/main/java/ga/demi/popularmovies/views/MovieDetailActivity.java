@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import ga.demi.popularmovies.App;
 import ga.demi.popularmovies.Constants;
@@ -26,7 +28,8 @@ import ga.demi.popularmovies.R;
 import ga.demi.popularmovies.adapters.MovieReviewsAdapter;
 import ga.demi.popularmovies.adapters.MovieVideosAdapter;
 import ga.demi.popularmovies.api.RequestToApiMovieDB;
-import ga.demi.popularmovies.data.MovieDatabase;
+import ga.demi.popularmovies.data.dao.FavoriteMovieDao;
+import ga.demi.popularmovies.data.models.FavoriteMovie;
 import ga.demi.popularmovies.models.Result;
 import ga.demi.popularmovies.models.ReviewsMovieModel;
 import ga.demi.popularmovies.models.VideosMovieModel;
@@ -39,7 +42,9 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
     private RequestToApiMovieDB mRequestToApiMovieDB;
     private Result mMoviePoster;
 
-    private MovieDatabase mMovieDatabase;
+    private FavoriteMovieDao mMovieDatabase;
+    private FavoriteMovie mFavoriteMovie;
+    private boolean mIsFavoriteMovie;
 
     private ImageView mMoviePosterIV;
     private TextView mMovieTitleTV;
@@ -66,7 +71,7 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
 
         mRequestToApiMovieDB = RequestToApiMovieDB.getInstanceRequestToApi();
 
-        mMovieDatabase = App.getInstanceApp().getMovieDatabase();
+        mMovieDatabase = App.getInstanceApp().getMovieDatabase().getFavoriteMovieDao();
 
         getSupportActionBar().setTitle("Movie detail");
 
@@ -93,12 +98,25 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
             if (mMoviePoster != null) {
                 String posterUrl = Constants.BASE_POSTER_URL + mMoviePoster.getPosterPath();
                 Picasso.get().load(posterUrl).into(mMoviePosterIV);
-            }
 
-            mMovieTitleTV.setText(mMoviePoster.getTitle());
-            mMovieDateReleaseTV.setText(mMoviePoster.getReleaseDate());
-            mMovieAverageTV.setText(String.valueOf(mMoviePoster.getVoteAverage()));
-            mMovieOverviewTV.setText(mMoviePoster.getOverview());
+                mMovieDatabase.getFavoriteMovieById(mMoviePoster.getId()).observe(this, favoriteMovies -> {
+                    mIsFavoriteMovie = favoriteMovies != null;
+                    setAsFavoriteButton(mIsFavoriteMovie);
+                });
+
+                mFavoriteMovie = new FavoriteMovie();
+                mFavoriteMovie.id = mMoviePoster.getId();
+                mFavoriteMovie.title = mMoviePoster.getTitle();
+                mFavoriteMovie.posterPath = mMoviePoster.getPosterPath();
+                mFavoriteMovie.releaseDate = mMoviePoster.getReleaseDate();
+                mFavoriteMovie.voteAverage = mMoviePoster.getVoteAverage();
+                mFavoriteMovie.overview = mMoviePoster.getOverview();
+
+                mMovieTitleTV.setText(mMoviePoster.getTitle());
+                mMovieDateReleaseTV.setText(mMoviePoster.getReleaseDate());
+                mMovieAverageTV.setText(String.valueOf(mMoviePoster.getVoteAverage()));
+                mMovieOverviewTV.setText(mMoviePoster.getOverview());
+            }
 
             LinearLayoutManager layoutManagerForVideo = new LinearLayoutManager(this);
             mVideosRV.setLayoutManager(layoutManagerForVideo);
@@ -117,8 +135,14 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
     protected void onResume() {
         super.onResume();
 
-        mMarkAsFavoriteB.setOnClickListener((view) -> {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+        mMarkAsFavoriteB.setOnClickListener((view) -> {
+            if (mIsFavoriteMovie) {
+                executorService.execute(() -> mMovieDatabase.deleteFavoriteMovie(mFavoriteMovie));
+            } else {
+                executorService.execute(() -> mMovieDatabase.insertFavoriteMovie(mFavoriteMovie));
+            }
         });
     }
 
@@ -221,5 +245,13 @@ public final class MovieDetailActivity extends AppCompatActivity implements Movi
                         showProgressBar(mReviewsPB, false);
                     }
                 });
+    }
+
+    private void setAsFavoriteButton(boolean isFavorite) {
+        if (isFavorite) {
+            mMarkAsFavoriteB.setText(getResources().getText(R.string.favorite_text));
+        } else {
+            mMarkAsFavoriteB.setText(getResources().getText(R.string.mark_as_favorite_text));
+        }
     }
 }

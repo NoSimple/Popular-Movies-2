@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ga.demi.popularmovies.App;
@@ -21,6 +22,7 @@ import ga.demi.popularmovies.R;
 import ga.demi.popularmovies.adapters.MoviePosterAdapter;
 import ga.demi.popularmovies.api.RequestToApiMovieDB;
 import ga.demi.popularmovies.data.MovieDatabase;
+import ga.demi.popularmovies.data.models.FavoriteMovie;
 import ga.demi.popularmovies.models.PopularMovieModel;
 import ga.demi.popularmovies.models.Result;
 import retrofit2.Call;
@@ -35,6 +37,7 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
 
     private RequestToApiMovieDB mRequestToApiMovieDB;
     private List<Result> mMoviePosterList;
+    private List<FavoriteMovie> mFavoriteMovieList;
 
     private MoviePosterAdapter mAdapter;
 
@@ -70,9 +73,13 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        if (mMovieDatabase.getFavoriteMovieDao().getFavoriteMovieAll().getValue() == null) {
-            menu.findItem(R.id.favorites_search).setEnabled(false);
-        }
+        mMovieDatabase.getFavoriteMovieDao().getFavoriteMovieAll().observe(this, favoriteMovies -> {
+            if (favoriteMovies == null || favoriteMovies.size() == 0) {
+                menu.findItem(R.id.favorites_search).setEnabled(false);
+            } else {
+                mFavoriteMovieList = favoriteMovies;
+            }
+        });
         return true;
     }
 
@@ -88,6 +95,7 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
                 break;
             }
             case (R.id.favorites_search): {
+                setMoviesFavorite(mFavoriteMovieList);
                 break;
             }
         }
@@ -185,5 +193,20 @@ public final class MainActivity extends AppCompatActivity implements MoviePoster
                         showProgressBar(false);
                     }
                 });
+    }
+
+    private void setMoviesFavorite(List<FavoriteMovie> favoriteMovies) {
+        mMoviePosterList = new ArrayList<>();
+        for (FavoriteMovie favoriteMovie : favoriteMovies) {
+            mMoviePosterList.add(new Result(
+                    favoriteMovie.id,
+                    favoriteMovie.title,
+                    favoriteMovie.posterPath,
+                    favoriteMovie.releaseDate,
+                    favoriteMovie.voteAverage,
+                    favoriteMovie.overview
+            ));
+        }
+        onPostExecute(mMoviePosterList);
     }
 }

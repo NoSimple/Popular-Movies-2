@@ -18,7 +18,9 @@ public final class App extends Application {
 
         instanceApp = this;
 
-        movieDatabase = Room.databaseBuilder(this, MovieDatabase.class, "movie_database").build();
+        movieDatabase = Room.databaseBuilder(this, MovieDatabase.class, "movie_database")
+                .fallbackToDestructiveMigration()
+                .build();
     }
 
     public static App getInstanceApp() {

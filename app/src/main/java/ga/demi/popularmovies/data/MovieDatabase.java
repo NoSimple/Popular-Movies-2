@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 import ga.demi.popularmovies.data.dao.FavoriteMovieDao;
 import ga.demi.popularmovies.data.models.FavoriteMovie;
 
-@Database(entities = {FavoriteMovie.class}, version = 1)
+@Database(entities = {FavoriteMovie.class}, version = 2)
 public abstract class MovieDatabase extends RoomDatabase {
 
     public abstract FavoriteMovieDao getFavoriteMovieDao();

@@ -8,6 +8,9 @@ public class FavoriteMovie {
 
     @PrimaryKey
     public int id;
-
+    public String title;
     public String posterPath;
+    public String releaseDate;
+    public double voteAverage;
+    public String overview;
 }
